@@ -183,7 +183,7 @@ export default class UserProfile extends mixins(UserMixin) {
 
   get userExp() {
     console.log(this.UserData?.progressionExp)
-    return (this.UserData?.progressionExp || 0) / 200
+    return (this.UserData?.progressionExp || 0) / 2
   }
 
   getIcon(subject: SubjectGroup_O | Subject_O) {
