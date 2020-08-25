@@ -10,13 +10,13 @@
             <!-- Avatar Col -->
             <div class="vx-col" id="avatar-col">
               <div class="img-container mb-4">
-                <img :src="AuthUser.photoURL" class="rounded-lg w-full" />
+                <img :src="UserData.photoURL" class="rounded-lg w-full" />
               </div>
             </div>
 
             <!-- Information - Col 1 -->
             <div class="vx-col flex-1 w-full md:text-lg text-2xl" id="account-info-col-1">
-              <div class="vx-row font-bold text-3xl" style>{{ AuthUser.displayName }}</div>
+              <div class="vx-row font-bold text-3xl" style>{{ UserData.displayName }}</div>
               <div
                 class="vx-row w-full text-2xl"
                 style
@@ -80,52 +80,39 @@
             <div class="vx-col w-full" style></div>
           </div>
           <!-- /Information - Col 2 -->
-
         </div>
       </VxCard>
 
       <!-- User's Notes Card -->
       <VxCard class="mb-base mt-12" v-if="AuthUser && UserData">
         <div class="vx-col flex-1 w-full" id="account-info-col-1">
-          <div class="vx-row font-bold text-2xl" style>{{ AuthUser.displayName }}'s Notes</div>
+          <div class="vx-row font-bold text-2xl" style>{{ UserData.displayName }}'s Notes</div>
         </div>
 
-        <div class="vx-row w-full" >
-          <div
-          class="vx-col w-full md:w-1/2 lg:w-1/4"
-            v-for="note in UserNotes"
-            :key="note.uid"
-          >
+        <div class="vx-row w-full">
+          <div class="vx-col w-full md:w-1/2 lg:w-1/4" v-for="note in UserNotes" :key="note.uid">
             <nuxt-link :to="`/notes/${note.id}`">
-              <v-card
-                class="my-4 overflow-hidden"
-                id="userCard"
-                color="#26c6da"
-                dark
-                width="100%"
-              >
+              <v-card class="my-4 overflow-hidden" id="userCard" color="#26c6da" dark width="100%">
                 <v-card-title>
-                  <div
-                    class="vx-row font-bold text-2xl"
-                  >{{ note.title }}</div>
+                  <div class="vx-row font-bold text-2xl">{{ note.title }}</div>
                 </v-card-title>
 
                 <v-card-text
                   class="overflow-hidden text-white md-container"
                   v-html="$md.render(note.contents)"
-                style="max-height: 20vh; color : white"
+                  style="max-height: 20vh; color : white"
                 ></v-card-text>
 
                 <v-card-actions style="margin-left: -0.75rem;">
                   <v-list-item class="grow">
                     <v-list-item-avatar color="grey darken-3" style="margin-right: 0.5rem;">
-                      <v-img class="elevation-6" :src="AuthUser.photoURL"></v-img>
+                      <v-img class="elevation-6" :src="UserData.photoURL"></v-img>
                     </v-list-item-avatar>
 
                     <v-list-item-content>
                       <v-list-item-title>
                         {{
-                        AuthUser.displayName
+                        UserData.displayName
                         }}
                       </v-list-item-title>
                     </v-list-item-content>
@@ -237,5 +224,4 @@ export default class UserProfile extends mixins(UserMixin) {
     width: calc(100% - 12rem) !important;
   }
 }
-
 </style>

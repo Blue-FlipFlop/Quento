@@ -11,13 +11,13 @@
   >
     <template #header>
       <div class="pt-10">
-        <h4 class="not-margin text-title text-4xl"><b>Posted</b> Notes</h4>
+        <h4 class="not-margin text-title text-4xl">
+          <b>Posted</b> Notes
+        </h4>
       </div>
     </template>
 
-    <div
-      class="con-form md:p-4 lg:p-8 p-2 flex vx-row w-full justify-evenly overflow-x-hidden"
-    >
+    <div class="con-form md:p-4 lg:p-8 p-2 flex vx-row w-full justify-evenly overflow-x-hidden">
       <vs-input
         v-model="title"
         placeholder="You should sell chocolate"
@@ -37,15 +37,10 @@
         placeholder="Subject"
         v-model="subjectSelect"
       >
-        <vs-option-group
-          v-for="(subjectGroup, index) in SubjectGroupList"
-          :key="index"
-        >
+        <vs-option-group v-for="(subjectGroup, index) in SubjectGroupList" :key="index">
           <div slot="title" class="w-full vx-row">
             <i class="bx text-xl mr-2" :class="subjectGroup.iconClass" />
-            <div class="font-bold truncate">
-              {{ subjectGroup.name }}
-            </div>
+            <div class="font-bold truncate">{{ subjectGroup.name }}</div>
           </div>
           <vs-option
             v-for="(subject, subIndex) in subjectGroup.items"
@@ -54,9 +49,7 @@
             :value="subject.name"
           >
             <i class="bx text-3xl mr-2" :class="subject.iconClass" />
-            <div class="font-bold truncate">
-              {{ subject.name }}
-            </div>
+            <div class="font-bold truncate">{{ subject.name }}</div>
           </vs-option>
         </vs-option-group>
       </vs-select>
@@ -82,8 +75,7 @@
         class="block"
         height="20rem"
         label="NOTABLE Content"
-      >
-      </VsTextarea>
+      ></VsTextarea>
       <VsUpload
         :show-upload-button="false"
         multiple
@@ -95,15 +87,8 @@
 
     <template #footer>
       <div class="footer-dialog vx-row justify-center md:pb-8 md:px-12 px-2">
-        <vs-button
-          class="md:w-1/2 w-full"
-          warn
-          :disabled="formErrors"
-          @click="PreviewNote()"
-        >
-          <div class="text-xl p-2 font-bold lg:text-2xl" style="">
-            PREVIEW NOTE
-          </div>
+        <vs-button class="md:w-1/2 w-full" warn :disabled="formErrors" @click="PreviewNote()">
+          <div class="text-xl p-2 font-bold lg:text-2xl" style>PREVIEW NOTE</div>
         </vs-button>
       </div>
     </template>
@@ -113,7 +98,12 @@
 <script lang="ts">
 import { Component, Vue, Prop, mixins, Watch } from 'nuxt-property-decorator'
 
-import { suggestionsStore, notesStore, windowStore, newslettersStore } from '~/store'
+import {
+  suggestionsStore,
+  notesStore,
+  windowStore,
+  newslettersStore
+} from '~/store'
 import {
   NestedSubjectList,
   SubjectGroup_O,
@@ -149,21 +139,18 @@ export default class PostNotesModal extends mixins(ValidateImage) {
   gradeSelect: Grade_O | '' = ''
 
   @Watch('IsReset')
-  onResetChanged(value : boolean, oldVal : boolean)
-  {
-    if(value)
-    {
-      this.ClearFields();
-      notesStore.SET_RESET(false);
+  onResetChanged(value: boolean, oldVal: boolean) {
+    if (value) {
+      this.ClearFields()
+      notesStore.SET_RESET(false)
     }
   }
 
-  get IsReset()
-  {
-    return notesStore.IsReset;
+  get IsReset() {
+    return notesStore.IsReset
   }
 
-  readonly GradeList = GradeList.filter(v=>v!=='ALL');
+  readonly GradeList = GradeList.filter((v) => v !== 'ALL')
   Cancel() {}
   // make this a mixin
   getIcon(subject: SubjectGroup_O | Subject_O) {
@@ -178,40 +165,44 @@ export default class PostNotesModal extends mixins(ValidateImage) {
   }
   title = ''
   contents = ''
-  ClearFields()
-  {
-    this.title=  this.contents = this.subjectSelect = this.gradeSelect = '';
-    this.srcs?.forEach(src => src.remove = true);
+  ClearFields() {
+    this.title = this.contents = this.subjectSelect = this.gradeSelect = ''
+    this.srcs?.forEach((src) => (src.remove = true))
   }
   get isLargeScreen() {
     return windowStore.isLargeScreen
   }
 
   get imageRefs() {
-    return (this.$refs.postImageUpload as Vue & {
-      filesx: File[]
-      srcs: imageSrc[]
-      itemRemove: any[]
-    }|undefined)?.filesx;
+    return (this.$refs.postImageUpload as
+      | (Vue & {
+          filesx: File[]
+          srcs: imageSrc[]
+          itemRemove: any[]
+        })
+      | undefined)?.filesx
   }
-  get srcs()
-  {
-    return (this.$refs.postImageUpload as Vue & {
-      filesx: File[]
-      srcs: imageSrc[]
-      itemRemove: any[]
-    } | undefined)?.srcs;
+  get srcs() {
+    return (this.$refs.postImageUpload as
+      | (Vue & {
+          filesx: File[]
+          srcs: imageSrc[]
+          itemRemove: any[]
+        })
+      | undefined)?.srcs
   }
   async PreviewNote() {
-    const refs = this.$refs.postImageUpload as Vue & {
-      filesx: File[]
-      srcs: imageSrc[]
-      itemRemove: any[]
-    } | undefined
+    const refs = this.$refs.postImageUpload as
+      | (Vue & {
+          filesx: File[]
+          srcs: imageSrc[]
+          itemRemove: any[]
+        })
+      | undefined
     const itemRemove = refs?.itemRemove
     const srcs = refs?.srcs.filter((src) => !src.remove).map((src) => src.src!)
     const postImageUpload = refs?.filesx
-    
+
     if (this.formErrors) {
       this.$vs.notification({
         color: 'danger',
@@ -223,8 +214,8 @@ export default class PostNotesModal extends mixins(ValidateImage) {
     const previewNote = new Note({
       title: this.title,
       uid: authStore.user?.uid!,
-      userDisplayName: authStore.user?.displayName!,
-      userPhotoUrl: authStore.user?.photoURL!,
+      userDisplayName: authStore.userData?.displayName!,
+      userPhotoUrl: authStore.userData?.photoURL!,
       createdAt: new Date(),
       upVotes: 0,
       views: 0,
@@ -234,7 +225,7 @@ export default class PostNotesModal extends mixins(ValidateImage) {
       images: srcs
     })
 
-    notesStore.SET_UPLOAD_IMAGES(postImageUpload);
+    notesStore.SET_UPLOAD_IMAGES(postImageUpload)
     notesStore.SetPreviewNote(previewNote)
     notesStore.TogglePreviewModal(true)
   }
@@ -253,8 +244,9 @@ export default class PostNotesModal extends mixins(ValidateImage) {
       this.subjectSelect == '' ||
       this.gradeSelect == '' ||
       !this.contents ||
-
-      (this.imageRefs && this.imageRefs.filter(image => this.validateImageType(image)).length < this.imageRefs.length)
+      (this.imageRefs &&
+        this.imageRefs.filter((image) => this.validateImageType(image)).length <
+          this.imageRefs.length)
     )
   }
 }

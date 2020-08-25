@@ -76,9 +76,9 @@ export default class QuestionsModule extends VuexModule {
       questionId,
       createdAt: new Date(),
       upVotes: 0,
-      userDisplayName: authStore.user?.displayName!,
+      userDisplayName: authStore.userData?.displayName!,
       userId: authStore.user?.uid!,
-      userPhotoUrl: authStore.user?.photoURL!,
+      userPhotoUrl: authStore.userData?.photoURL!,
       views: 0
     })
     return await firestore
@@ -127,9 +127,9 @@ export default class QuestionsModule extends VuexModule {
         : FirestoreModule.FieldValue.increment(1)
     })
     await batch.commit()
-    functions.httpsCallable("algoliaUpdateQuestion")({
-        questionId
-    });
+    functions.httpsCallable('algoliaUpdateQuestion')({
+      questionId
+    })
     await authStore.refreshUserData()
     return
   }
@@ -144,7 +144,11 @@ export default class QuestionsModule extends VuexModule {
     await authStore.refreshUserData()
     const batch = firestore.batch()
     const userRef = firestore.collection('users').doc(authStore.user?.uid)
-    const responseRef = firestore.collection('questions').doc(questionId).collection("responses").doc(responseId)
+    const responseRef = firestore
+      .collection('questions')
+      .doc(questionId)
+      .collection('responses')
+      .doc(responseId)
 
     const userLiked = authStore.userData?.likedResponses?.includes(responseId)
     batch.update(userRef, {
